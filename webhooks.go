@@ -1,12 +1,13 @@
 package acapy
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/tidwall/gjson"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"strings"
 )
 
 type WebhookHandlers struct {
@@ -26,9 +27,18 @@ type WebhookHandlers struct {
 
 func CreateWebhooksHandler(handlers WebhookHandlers) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+/*
 		path := strings.Split(strings.TrimSuffix(r.URL.Path, "/"), "/")
 		topic := path[len(path)-1]
+*/
+		// dr.jhyun
+		bodyAsBytes, _ := ioutil.ReadAll(r.Body)
+		r.Body.Close()
 
+		topic := gjson.Get(string(bodyAsBytes), "topic").String()
+		fmt.Printf("Webhook topic: %s\n", topic)
+
+		r.Body = ioutil.NopCloser(bytes.NewBuffer(bodyAsBytes))
 		defer r.Body.Close()
 
 		switch topic {
@@ -143,6 +153,9 @@ type BasicMessagesEvent struct {
 	MessageID    string `json:"message_id"`
 	State        string `json:"state"`
 	Content      string `json:"content"`
+
+	// dr.jhyun
+	SentTime      string `json:"sent_time"`
 }
 
 type ProblemReportEvent struct {

@@ -88,7 +88,9 @@ func (c *Client) request(method string, url string, queryParams map[string]strin
 		return err
 	}
 	if c.apiKey != "" {
-		r.Header.Add("X-API-KEY", c.apiKey)
+		// dr.jhyun
+		//r.Header.Add("X-API-KEY", c.apiKey)
+		r.Header.Add("Authorization", "Bearer " + c.apiKey)
 	}
 	r.Header.Add("Content-Type", "application/json")
 
@@ -104,7 +106,7 @@ func (c *Client) request(method string, url string, queryParams map[string]strin
 	if err != nil || response.StatusCode >= 300 {
 		if response != nil {
 			log.Printf("Request failed: %s", response.Status)
-			if body, err := ioutil.ReadAll(response.Body); err != nil {
+			if body, err := ioutil.ReadAll(response.Body); err == nil {
 				log.Printf("Response body: %s", body)
 			}
 		}

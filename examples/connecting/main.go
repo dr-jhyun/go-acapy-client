@@ -65,7 +65,8 @@ func (app *App) ReadCommands() {
 			scanner.Scan()
 			theirLabel := scanner.Text()
 
-			invitationResponse, err := app.client.CreateInvitation(theirLabel, false, false, true)
+			//invitationResponse, err := app.client.CreateInvitation(theirLabel, false, false, true)
+			invitationResponse, err := app.client.CreateInvitation(theirLabel, true, false, false)
 			if err != nil {
 				app.Exit(err)
 			}
@@ -159,7 +160,9 @@ func (app *App) StartWebserver() {
 		OutOfBandEventHandler:     app.OutOfBandEventHandler,
 	})
 
-	r.HandleFunc("/webhooks/topic/{topic}/", webhookHandler).Methods(http.MethodPost)
+	// dr.jhyun
+	// r.HandleFunc("/webhooks/topic/{topic}/", webhookHandler).Methods(http.MethodPost)
+	r.HandleFunc("/webhooks", webhookHandler).Methods(http.MethodPost)
 	fmt.Printf("Listening on http://localhost:%d\n", app.port)
 	fmt.Printf("ACA-py Admin API on http://localhost:%d\n", app.port+2)
 
@@ -214,15 +217,19 @@ func (app *App) ProblemReportEventHandler(event acapy.ProblemReportEvent) {
 }
 
 func main() {
-	var port = 4455
+	var port = 8040
 	var ledgerURL = "http://localhost:9000"
 	var name = ""
+	var key = ""
 
-	flag.IntVar(&port, "port", 4455, "port")
+	flag.IntVar(&port, "port", 8040, "port")
 	flag.StringVar(&name, "name", "Alice", "alice")
+	flag.StringVar(&key, "key", "4d31faa5-149d-4d40-a094-c831bc12e270", "key")
 	flag.Parse()
 
-	acapyURL := fmt.Sprintf("http://localhost:%d", port+2)
+	// dr.jhyun
+	//acapyURL := fmt.Sprintf("http://localhost:%d", port+2)
+	acapyURL := "https://dev-console.myinitial.io/agent/api"
 
 	app := App{
 		client:    acapy.NewClient(acapyURL),
@@ -231,11 +238,16 @@ func main() {
 		label:     name,
 		rand:      strconv.Itoa(rand.New(rand.NewSource(time.Now().UnixNano())).Intn(100000)),
 	}
+
+	// dr.jhyun
+	app.client.SetAPIKey(key)
+
 	app.StartWebserver()
 	app.ReadCommands()
 }
 
 func (app *App) RegisterDID(alias string, seed string) (acapy.RegisterDIDResponse, error) {
+/*
 	didResponse, err := acapy.RegisterDID(
 		app.ledgerURL+"/register",
 		alias,
@@ -248,6 +260,8 @@ func (app *App) RegisterDID(alias string, seed string) (acapy.RegisterDIDRespons
 	app.label = alias
 	app.seed = didResponse.Seed
 	app.StartACApy()
+*/
+	didResponse := acapy.RegisterDIDResponse{ DID: "7SGtKCBxR46K84f755RdtZ" }
 	return didResponse, nil
 }
 
@@ -257,5 +271,5 @@ func (app *App) ReceiveInvitation(inv []byte) (acapy.Connection, error) {
 	if err != nil {
 		return acapy.Connection{}, err
 	}
-	return app.client.ReceiveInvitation(invitation, false)
+	return app.client.ReceiveInvitation(invitation, true)
 }
