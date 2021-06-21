@@ -36,7 +36,7 @@ func CreateWebhooksHandler(handlers WebhookHandlers) func(w http.ResponseWriter,
 		r.Body.Close()
 
 		topic := gjson.Get(string(bodyAsBytes), "topic").String()
-		fmt.Printf("Webhook topic: %s\n", topic)
+		//fmt.Printf("Webhook topic: %s\n", topic)
 
 		r.Body = ioutil.NopCloser(bytes.NewBuffer(bodyAsBytes))
 		defer r.Body.Close()
