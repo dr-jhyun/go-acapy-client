@@ -1,27 +1,46 @@
 package acapy
 
-import (
-	"strconv"
-)
-
 type QueryDIDsParams DID
 
+// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
+/*
 type DID struct {
 	DID    string `json:"did"`
 	Public bool   `json:"public"`
 	VerKey string `json:"verkey"`
+}*/
+
+type DID struct {
+	DID     string `json:"did"`
+	VerKey  string `json:"verkey"`
+	Posture string `json:"posture"`
+	KeyType string `json:"key_type"`
+	Method  string `json:"method"`
 }
+
+// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
 
 func (c *Client) QueryDIDs(params QueryDIDsParams) ([]DID, error) {
 	type results struct {
 		DIDs []DID `json:"results"`
 	}
 	var r results
+	// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
+	/*
+		queryParams := map[string]string{
+			"did":    params.DID,
+			"public": strconv.FormatBool(params.Public),
+			"verkey": params.VerKey,
+		}
+	*/
 	queryParams := map[string]string{
-		"did":    params.DID,
-		"public": strconv.FormatBool(params.Public),
-		"verkey": params.VerKey,
+		"did":     params.DID,
+		"verkey":  params.VerKey,
+		"posture": params.Posture,
+		"key_type":  params.KeyType,
+		"method":  params.Method,
 	}
+	// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
 	err := c.get("/wallet/did", queryParams, &r)
 	if err != nil {
 		return nil, err
@@ -30,7 +49,8 @@ func (c *Client) QueryDIDs(params QueryDIDsParams) ([]DID, error) {
 }
 
 type didResult struct {
-	DID `json:"didResult"`
+	//DID `json:"result"`
+	DID DID `json:"result"`
 }
 
 func (c *Client) CreateLocalDID() (DID, error) {
