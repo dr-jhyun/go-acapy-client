@@ -34,11 +34,11 @@ func (c *Client) QueryDIDs(params QueryDIDsParams) ([]DID, error) {
 		}
 	*/
 	queryParams := map[string]string{
-		"did":     params.DID,
-		"verkey":  params.VerKey,
-		"posture": params.Posture,
-		"key_type":  params.KeyType,
-		"method":  params.Method,
+		"did":      params.DID,
+		"verkey":   params.VerKey,
+		"posture":  params.Posture,
+		"key_type": params.KeyType,
+		"method":   params.Method,
 	}
 	// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
 	err := c.get("/wallet/did", queryParams, &r)
