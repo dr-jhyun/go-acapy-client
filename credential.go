@@ -21,9 +21,17 @@ func (c *Client) GetCredentials(max int, index int, wql string) ([]Credential, e
 	var results struct {
 		Credentials []Credential `json:"results"`
 	}
+	// dr.jhyun
+/*
 	queryParams := map[string]string{
 		"max":   strconv.Itoa(max),
 		"index": strconv.Itoa(index),
+		"wql":   wql,
+	}
+*/
+	queryParams := map[string]string{
+		"count":   strconv.Itoa(max),
+		"start": strconv.Itoa(index),
 		"wql":   wql,
 	}
 	err := c.get("/credentials", queryParams, &results)

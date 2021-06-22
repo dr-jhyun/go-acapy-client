@@ -27,10 +27,10 @@ type WebhookHandlers struct {
 
 func CreateWebhooksHandler(handlers WebhookHandlers) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-/*
-		path := strings.Split(strings.TrimSuffix(r.URL.Path, "/"), "/")
-		topic := path[len(path)-1]
-*/
+		/*
+			path := strings.Split(strings.TrimSuffix(r.URL.Path, "/"), "/")
+			topic := path[len(path)-1]
+		*/
 		// dr.jhyun
 		bodyAsBytes, _ := ioutil.ReadAll(r.Body)
 		r.Body.Close()
@@ -155,7 +155,7 @@ type BasicMessagesEvent struct {
 	Content      string `json:"content"`
 
 	// dr.jhyun
-	SentTime      string `json:"sent_time"`
+	SentTime string `json:"sent_time"`
 }
 
 type ProblemReportEvent struct {

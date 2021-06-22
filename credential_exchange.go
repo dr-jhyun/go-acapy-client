@@ -138,6 +138,55 @@ func (c *Client) OfferCredentialByID(credentialExchangeID string) (CredentialExc
 	return credentialExchange, nil
 }
 
+// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
+type credentialCountProposal struct {
+	CredentialDefinitionID string            `json:"cred_def_id,omitempty"` // required
+	CredentialPreview      CredentialPreview `json:"credential_proposal"`   // required
+	IssuerDID              string            `json:"issuer_did,omitempty"`
+	SchemaID               string            `json:"schema_id,omitempty"`
+	SchemaIssuerDID        string            `json:"schema_issuer_did,omitempty"`
+	SchemaName             string            `json:"schema_name,omitempty"`
+	SchemaVersion          string            `json:"schema_version,omitempty"`
+	Comment                string            `json:"comment,omitempty"`
+}
+
+type credentialBoundOfferRequest struct {
+	CountProposal credentialCountProposal `json:"counter_proposal"`
+}
+
+// CounterOfferCredentialByID sends an count offer to the holder based on a previously received proposal
+func (c *Client) CounterOfferCredentialByID(
+	credentialExchangeID string,
+	credentialDefinitionID string,
+	credentialPreview CredentialPreview,
+	issuerDID string,
+	schemaID string,
+	schemaIssuerDID string,
+	schemaName string,
+	schemaVersion string,
+	comment string,
+) (CredentialExchangeRecord, error) {
+	var countOffer = credentialBoundOfferRequest{
+		CountProposal: credentialCountProposal{
+			CredentialDefinitionID: credentialDefinitionID,
+			CredentialPreview: credentialPreview,
+			IssuerDID: issuerDID,
+			SchemaID: schemaID,
+			SchemaIssuerDID: schemaIssuerDID,
+			SchemaName: schemaName,
+			SchemaVersion: schemaVersion,
+			Comment: comment,
+		},
+	}
+	var credentialExchange CredentialExchangeRecord
+	err := c.post(fmt.Sprintf("/issue-credential/records/%s/send-offer", credentialExchangeID), nil, countOffer, &credentialExchange)
+	if err != nil {
+		return CredentialExchangeRecord{}, err
+	}
+	return credentialExchange, nil
+}
+// <<<<< dr.jhyun ------------------------------------------------------------------------------------------------------
+
 // RequestCredentialByID sends a credential request to the issuer based on a previously received offer
 func (c *Client) RequestCredentialByID(credentialExchangeID string) (CredentialExchangeRecord, error) {
 	var credentialExchange CredentialExchangeRecord

@@ -92,7 +92,7 @@ func (c *Client) request(method string, url string, queryParams map[string]strin
 	if c.apiKey != "" {
 		// dr.jhyun
 		//r.Header.Add("X-API-KEY", c.apiKey)
-		r.Header.Add("Authorization", "Bearer " + c.apiKey)
+		r.Header.Add("Authorization", "Bearer "+c.apiKey)
 	}
 	r.Header.Add("Content-Type", "application/json")
 
