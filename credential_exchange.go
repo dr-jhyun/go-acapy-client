@@ -151,7 +151,7 @@ type credentialCountProposal struct {
 }
 
 type credentialBoundOfferRequest struct {
-	CountProposal credentialCountProposal `json:"counter_proposal"`
+	CounterProposal credentialCountProposal `json:"counter_proposal"`
 }
 
 // CounterOfferCredentialByID sends an count offer to the holder based on a previously received proposal
@@ -167,15 +167,15 @@ func (c *Client) CounterOfferCredentialByID(
 	comment string,
 ) (CredentialExchangeRecord, error) {
 	var countOffer = credentialBoundOfferRequest{
-		CountProposal: credentialCountProposal{
+		CounterProposal: credentialCountProposal{
 			CredentialDefinitionID: credentialDefinitionID,
-			CredentialPreview: credentialPreview,
-			IssuerDID: issuerDID,
-			SchemaID: schemaID,
-			SchemaIssuerDID: schemaIssuerDID,
-			SchemaName: schemaName,
-			SchemaVersion: schemaVersion,
-			Comment: comment,
+			CredentialPreview:      credentialPreview,
+			IssuerDID:              issuerDID,
+			SchemaID:               schemaID,
+			SchemaIssuerDID:        schemaIssuerDID,
+			SchemaName:             schemaName,
+			SchemaVersion:          schemaVersion,
+			Comment:                comment,
 		},
 	}
 	var credentialExchange CredentialExchangeRecord
@@ -185,6 +185,7 @@ func (c *Client) CounterOfferCredentialByID(
 	}
 	return credentialExchange, nil
 }
+
 // <<<<< dr.jhyun ------------------------------------------------------------------------------------------------------
 
 // RequestCredentialByID sends a credential request to the issuer based on a previously received offer
