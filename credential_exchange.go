@@ -284,7 +284,9 @@ type QueryCredentialExchangeParams struct {
 
 func (c *Client) QueryCredentialExchange(params QueryCredentialExchangeParams) ([]CredentialExchangeRecord, error) {
 	var result = struct {
-		Results []CredentialExchangeRecord `json:"result"`
+		// dr.jhyun
+		// Results []CredentialExchangeRecord `json:"result"`
+		Results []CredentialExchangeRecord `json:"results"`
 	}{}
 	var queryParams = map[string]string{
 		"connection_id": params.ConnectionID,
