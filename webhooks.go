@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/tidwall/gjson"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -31,15 +31,20 @@ func CreateWebhooksHandler(handlers WebhookHandlers) func(w http.ResponseWriter,
 			path := strings.Split(strings.TrimSuffix(r.URL.Path, "/"), "/")
 			topic := path[len(path)-1]
 		*/
-		// dr.jhyun
-		bodyAsBytes, _ := ioutil.ReadAll(r.Body)
-		r.Body.Close()
+		// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
+		var event struct {
+			Topic string `json:"topic"`
+		}
 
-		topic := gjson.Get(string(bodyAsBytes), "topic").String()
-		//fmt.Printf("Webhook topic: %s\n", topic)
+		buf := bytes.NewBuffer(make([]byte, 0))
+		reader := io.TeeReader(r.Body, buf)
 
-		r.Body = ioutil.NopCloser(bytes.NewBuffer(bodyAsBytes))
+		_ =  json.NewDecoder(reader).Decode(&event)
+		topic := event.Topic
+
+		r.Body = ioutil.NopCloser(buf)
 		defer r.Body.Close()
+		// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
 
 		switch topic {
 		case "connections":
