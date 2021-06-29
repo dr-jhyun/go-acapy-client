@@ -316,7 +316,9 @@ func (c *Client) RemoveCredentialExchange(credentialExchangeID string) error {
 
 func (c *Client) ReportCredentialExchangeProblem(credentialExchangeID string, message string) error {
 	var body = struct {
-		Message string `json:"explain_ltxt"`
+		// dr.jhyun
+		Message string `json:"description"`
+//		Message string `json:"explain_ltxt"`
 	}{
 		Message: message,
 	}
