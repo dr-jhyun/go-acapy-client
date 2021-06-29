@@ -26,3 +26,21 @@ func (c *Client) DIDExchangeAcceptRequest(connectionID string, myEndpoint string
 	}
 	return connection, nil
 }
+
+// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
+func (c *Client) DIDExchangeCreateRequest(theirPublicDID string, mediationID string, myEndpoint string, myLabel string) (Connection, error) {
+	var connection Connection
+	var queryParams = map[string]string{
+		"their_public_did": theirPublicDID,
+		"mediation_id":     mediationID,
+		"my_endpoint":      myEndpoint,
+		"my_label":         myLabel,
+	}
+	err := c.post("/didexchange/create-request", queryParams, nil, &connection)
+	if err != nil {
+		return Connection{}, err
+	}
+	return connection, nil
+}
+
+// <<<<< dr.jhyun ------------------------------------------------------------------------------------------------------
