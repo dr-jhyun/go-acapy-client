@@ -3,9 +3,9 @@ package acapy
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -105,6 +105,8 @@ func (c *Client) request(method string, url string, queryParams map[string]strin
 	r.URL.RawQuery = q.Encode()
 
 	response, err := c.HTTPClient.Do(r)
+	// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
+/*
 	if err != nil || response.StatusCode >= 300 {
 		if response != nil {
 			log.Printf("Request failed: %s", response.Status)
@@ -114,6 +116,19 @@ func (c *Client) request(method string, url string, queryParams map[string]strin
 		}
 		return err
 	}
+*/
+	if err != nil {
+		return err
+	}
+
+	if response.StatusCode >= 300 {
+		msg := fmt.Sprintf("Request failed: %s", response.Status)
+		if body, err := ioutil.ReadAll(response.Body); err == nil {
+			msg += fmt.Sprintf("\nResponse body: %s", body)
+		}
+		return fmt.Errorf(msg)
+	}
+	// <<<<< dr.jhyun ------------------------------------------------------------------------------------------------------
 
 	if responseObject != nil {
 		err = json.NewDecoder(response.Body).Decode(responseObject)

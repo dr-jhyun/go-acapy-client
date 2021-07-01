@@ -75,25 +75,33 @@ func (c *Client) RemoveCredential(credentialID string) error {
 	return c.delete(fmt.Sprintf("/credential/%s", credentialID))
 }
 
-func (c *Client) FindMatchingCredentials(request PresentationRequest) (map[string]PresentationProofAttribute, error) {
+func (c *Client) FindMatchingCredentials(request PresentationRequest) (
+	map[string]PresentationProofAttribute,
+	map[string]PresentationProofPredicate,
+	error,
+) {
+	// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
+	var credentials []Credential
 
 	requestedAttributes := map[string]PresentationProofAttribute{}
 
 	for attrName, attr := range request.RequestedAttributes {
 		restrictions, err := json.Marshal(attr.Restrictions[0])
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
-		credentials, err := c.GetCredentials(10, 0, string(restrictions))
+		credentials, err = c.GetCredentials(100, 0, string(restrictions))
 
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		if len(credentials) == 0 {
-			return nil, fmt.Errorf("no credentials found for %s", attrName)
+			return nil, nil, fmt.Errorf("no credentials found for %s", attrName)
 		} else if len(credentials) > 1 {
-			return nil, fmt.Errorf("multiple credentials found for %s", attrName)
+			// return nil, nil, fmt.Errorf("multiple credentials found for %s", attrName)
+			// Use 1st matched credential
+			fmt.Printf("multiple credentials found for %s\n", attrName)
 		}
 
 		if containsAllAttributes(credentials[0], attr.Names) {
@@ -104,7 +112,17 @@ func (c *Client) FindMatchingCredentials(request PresentationRequest) (map[strin
 			}
 		}
 	}
-	return requestedAttributes, nil
+
+	requestedPredicates := map[string]PresentationProofPredicate{}
+
+	for predicateName, _ := range request.RequestedPredicates {
+		requestedPredicates[predicateName] = PresentationProofPredicate{
+			CredentialID: credentials[0].Referent,
+		}
+	}
+
+	return requestedAttributes, requestedPredicates, nil
+	// <<<<< dr.jhyun ------------------------------------------------------------------------------------------------------
 }
 
 func containsAllAttributes(credential Credential, attrs []string) bool {

@@ -209,7 +209,7 @@ func (r Restrictions) IsEmpty() bool {
 func NewRequestedPredicate(
 	restrictions *Restrictions,
 	name string,
-	names []string,
+//	names []string,
 	ptype PredicateType,
 	pvalue int,
 	nonRevoked NonRevoked,
@@ -217,20 +217,16 @@ func NewRequestedPredicate(
 
 	restrictionsSlice := make([]Restrictions, 0)
 
-	if name != "" && len(names) > 0 {
-		return RequestedPredicate{}, errors.New("use either 'name' or 'names', but not both")
+	// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
+	if name == "" {
+		return RequestedPredicate{}, errors.New("'name' cannot not be empty")
 	}
-	if len(names) > 0 {
-		if restrictions == nil || restrictions.IsEmpty() {
-			return RequestedPredicate{}, errors.New("restrictions cannot be empty when using 'names'")
-		}
-		restrictionsSlice = append(restrictionsSlice, *restrictions)
-	}
+
+	restrictionsSlice = append(restrictionsSlice, *restrictions)
 
 	return RequestedPredicate{
 		Restrictions: restrictionsSlice,
 		Name:         name,
-		Names:        names,
 		PType:        ptype,
 		PValue:       pvalue,
 		NonRevoked:   nonRevoked,
@@ -240,7 +236,8 @@ func NewRequestedPredicate(
 type RequestedPredicate struct {
 	Restrictions []Restrictions `json:"restrictions"`    // Required when using Names, otherwise empty slice instead of nil
 	Name         string         `json:"name,omitempty"`  // XOR with Names
-	Names        []string       `json:"names,omitempty"` // XOR with Name | Requires non-empty restrictions
+// dr.jhyun
+// Names        []string       `json:"names,omitempty"` // XOR with Name | Requires non-empty restrictions
 	PType        PredicateType  `json:"p_type"`
 	PValue       int            `json:"p_value"`
 	NonRevoked   NonRevoked     `json:"non_revoked"` // Optional
@@ -258,6 +255,11 @@ func NewRequestedAttribute(
 	if name != "" && len(names) > 0 {
 		return RequestedAttribute{}, errors.New("use either 'name' or 'names', but not both")
 	}
+	// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
+	if name != "" {
+		restrictionsSlice = append(restrictionsSlice, *restrictions)
+	}
+	// <<<<< dr.jhyun ------------------------------------------------------------------------------------------------------
 	if len(names) > 0 {
 		if restrictions == nil || restrictions.IsEmpty() {
 			return RequestedAttribute{}, errors.New("restrictions cannot be empty when using 'names'")
@@ -478,3 +480,14 @@ func (c *Client) GetPresentationCredentialsByID(presentationExchangeID string, c
 func (c *Client) RemovePresentationExchangeByID(presentationExchangeID string) error {
 	return c.delete(fmt.Sprintf("/present-proof/records/%s", presentationExchangeID))
 }
+
+// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
+func (c *Client) ReportPresentationExchangeProblem(presentationExchangeID string, message string) error {
+	var body = struct {
+		Message string `json:"description"`
+	}{
+		Message: message,
+	}
+	return c.post(fmt.Sprintf("/present-proof/records/%s/problem-report", presentationExchangeID), nil, body, nil)
+}
+// <<<<< dr.jhyun ------------------------------------------------------------------------------------------------------
