@@ -86,23 +86,36 @@ type PresentationProposalMap struct {
 // }
 
 // TODO
+// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
 type RequestedProof struct {
-	RevealedAttrs      struct{}                `json:"revealed_attrs"`
-	RevealedAttrGroups map[string]RevealedAttr `json:"revealed_attr_groups"`
-	SelfAttestedAttrs  struct{}                `json:"self_attested_attrs"`
-	UnrevealedAttrs    struct{}                `json:"unrevealed_attrs"`
-	Predicates         struct{}                `json:"predicates"`
+	RevealedAttrs      map[string]RevealedAttr      `json:"revealed_attrs"`
+	RevealedAttrGroups map[string]RevealedAttrGroup `json:"revealed_attr_groups"`
+	SelfAttestedAttrs  struct{}                     `json:"self_attested_attrs"`
+	UnrevealedAttrs    struct{}                     `json:"unrevealed_attrs"`
+	Predicates         map[string]RequestedProofPredicate `json:"predicates"`
 }
 
 type RevealedAttr struct {
-	SubProofIndex int `json:"sub_proof_index"`
-	Values        struct {
-		Name struct {
-			Raw     string `json:"raw"`
-			Encoded string `json:"encoded"`
-		} `json:"name"`
-	} `json:"values"`
+	SubProofIndex int    `json:"sub_proof_index"`
+	Raw           string `json:"raw"`
+	Encoded       string `json:"encoded"`
 }
+
+type RevealedAttrGroup struct {
+	SubProofIndex int                   `json:"sub_proof_index"`
+	Values        map[string]RawEncoded `json:"values"`
+}
+
+type RawEncoded struct {
+	Raw     string `json:"raw"`
+	Encoded string `json:"encoded"`
+}
+
+type RequestedProofPredicate struct {
+	SubProofIndex int                   `json:"sub_proof_index"`
+}
+
+// <<<<< dr.jhyun ------------------------------------------------------------------------------------------------------
 
 type Presentation struct {
 	// Proof          Proof          `json:"proof"` // TODO
@@ -209,7 +222,7 @@ func (r Restrictions) IsEmpty() bool {
 func NewRequestedPredicate(
 	restrictions *Restrictions,
 	name string,
-//	names []string,
+	//	names []string,
 	ptype PredicateType,
 	pvalue int,
 	nonRevoked NonRevoked,
@@ -235,13 +248,13 @@ func NewRequestedPredicate(
 }
 
 type RequestedPredicate struct {
-	Restrictions []Restrictions `json:"restrictions"`    // Required when using Names, otherwise empty slice instead of nil
-	Name         string         `json:"name,omitempty"`  // XOR with Names
-// dr.jhyun
-// Names        []string       `json:"names,omitempty"` // XOR with Name | Requires non-empty restrictions
-	PType        PredicateType  `json:"p_type"`
-	PValue       int            `json:"p_value"`
-	NonRevoked   NonRevoked     `json:"non_revoked"` // Optional
+	Restrictions []Restrictions `json:"restrictions"`   // Required when using Names, otherwise empty slice instead of nil
+	Name         string         `json:"name,omitempty"` // XOR with Names
+	// dr.jhyun
+	// Names        []string       `json:"names,omitempty"` // XOR with Name | Requires non-empty restrictions
+	PType      PredicateType `json:"p_type"`
+	PValue     int           `json:"p_value"`
+	NonRevoked NonRevoked    `json:"non_revoked"` // Optional
 }
 
 func NewRequestedAttribute(
@@ -491,4 +504,5 @@ func (c *Client) ReportPresentationExchangeProblem(presentationExchangeID string
 	}
 	return c.post(fmt.Sprintf("/present-proof/records/%s/problem-report", presentationExchangeID), nil, body, nil)
 }
+
 // <<<<< dr.jhyun ------------------------------------------------------------------------------------------------------
