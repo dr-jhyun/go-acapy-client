@@ -92,7 +92,7 @@ type RequestedProof struct {
 	RevealedAttrGroups map[string]RevealedAttrGroup `json:"revealed_attr_groups"`
 	SelfAttestedAttrs  struct{}                     `json:"self_attested_attrs"`
 	UnrevealedAttrs    struct{}                     `json:"unrevealed_attrs"`
-	Predicates         map[string]RequestedProofPredicate `json:"predicates"`
+	Predicates         map[string]ProofPredicate    `json:"predicates"`
 }
 
 type RevealedAttr struct {
@@ -111,8 +111,8 @@ type RawEncoded struct {
 	Encoded string `json:"encoded"`
 }
 
-type RequestedProofPredicate struct {
-	SubProofIndex int                   `json:"sub_proof_index"`
+type ProofPredicate struct {
+	SubProofIndex int `json:"sub_proof_index"`
 }
 
 // <<<<< dr.jhyun ------------------------------------------------------------------------------------------------------
