@@ -84,13 +84,12 @@ func (c *Client) FindMatchingCredentials(request PresentationRequest) (
 	var credentials []Credential
 
 	requestedAttributes := map[string]PresentationProofAttribute{}
-
 	for attrName, attr := range request.RequestedAttributes {
 		restrictions, err := json.Marshal(attr.Restrictions[0])
 		if err != nil {
 			return nil, nil, err
 		}
-		credentials, err = c.GetCredentials(100, 0, string(restrictions))
+		credentials, err = c.GetCredentials(10, 0, string(restrictions))
 
 		if err != nil {
 			return nil, nil, err
@@ -114,7 +113,6 @@ func (c *Client) FindMatchingCredentials(request PresentationRequest) (
 	}
 
 	requestedPredicates := map[string]PresentationProofPredicate{}
-
 	for predicateName, _ := range request.RequestedPredicates {
 		requestedPredicates[predicateName] = PresentationProofPredicate{
 			CredentialID: credentials[0].Referent,

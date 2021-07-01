@@ -223,6 +223,7 @@ func NewRequestedPredicate(
 	}
 
 	restrictionsSlice = append(restrictionsSlice, *restrictions)
+	// <<<<< dr.jhyun ------------------------------------------------------------------------------------------------------
 
 	return RequestedPredicate{
 		Restrictions: restrictionsSlice,
