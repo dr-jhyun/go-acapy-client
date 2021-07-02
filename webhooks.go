@@ -1,13 +1,12 @@
 package acapy
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type WebhookHandlers struct {
@@ -27,24 +26,10 @@ type WebhookHandlers struct {
 
 func CreateWebhooksHandler(handlers WebhookHandlers) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		/*
-			path := strings.Split(strings.TrimSuffix(r.URL.Path, "/"), "/")
-			topic := path[len(path)-1]
-		*/
-		// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
-		var event struct {
-			Topic string `json:"topic"`
-		}
+		path := strings.Split(strings.TrimSuffix(r.URL.Path, "/"), "/")
+		topic := path[len(path)-1]
 
-		buf := bytes.NewBuffer(make([]byte, 0))
-		reader := io.TeeReader(r.Body, buf)
-
-		_ =  json.NewDecoder(reader).Decode(&event)
-		topic := event.Topic
-
-		r.Body = ioutil.NopCloser(buf)
 		defer r.Body.Close()
-		// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
 
 		switch topic {
 		case "connections":
@@ -158,9 +143,6 @@ type BasicMessagesEvent struct {
 	MessageID    string `json:"message_id"`
 	State        string `json:"state"`
 	Content      string `json:"content"`
-
-	// dr.jhyun
-	SentTime string `json:"sent_time"`
 }
 
 type ProblemReportEvent struct {
