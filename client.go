@@ -117,6 +117,13 @@ func (c *Client) request(method string, url string, queryParams map[string]strin
 		return err
 	}
 */
+	defer func() {
+		if response != nil {
+			_, _ = io.Copy(ioutil.Discard, response.Body)
+			_ = response.Body.Close()
+		}
+	}()
+
 	if err != nil {
 		return err
 	}
