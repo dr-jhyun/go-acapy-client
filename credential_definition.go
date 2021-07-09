@@ -17,13 +17,17 @@ func (c *Client) CreateCredentialDefinition(tag string, supportRevocation bool, 
 		SchemaID:               schemaID,
 	}
 	var response = struct {
-		CredentialDefinitionID string `json:"credential_definition_id"`
+		// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
+		Sent struct {
+			CredentialDefinitionID string `json:"credential_definition_id"`
+		} `json:"sent"`
+		// <<<<< dr.jhyun ------------------------------------------------------------------------------------------------------
 	}{}
 	err := c.post("/credential-definitions", nil, request, &response)
 	if err != nil {
 		return "", err
 	}
-	return response.CredentialDefinitionID, nil
+	return response.Sent.CredentialDefinitionID, nil
 }
 
 type QueryCredentialDefinitionsParams struct {
