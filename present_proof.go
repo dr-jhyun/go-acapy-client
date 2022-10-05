@@ -16,7 +16,7 @@ type PresentationExchangeRecord struct {
 	Role                     string                  `json:"role"`
 	PresentationProposalDict PresentationProposalMap `json:"presentation_proposal_dict"`
 	PresentationRequest      PresentationRequest     `json:"presentation_request"`
-	PresentationRequestDict  struct{}                `json:"presentation_request_dict"` // TODO ?
+	PresentationRequestDict  PresentationRequestMap  `json:"presentation_request_dict"` // TODO ?, modified by dr.jhyun
 	Presentation             Presentation            `json:"presentation"`
 	Verified                 string                  `json:"verified"`
 	CreatedAt                string                  `json:"created_at"`
@@ -32,6 +32,16 @@ type PresentationProposalMap struct {
 	Comment              string              `json:"comment"`
 	PresentationProposal PresentationPreview `json:"presentation_proposal"`
 }
+
+// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
+type PresentationRequestMap struct {
+	ThreadID                   string            `json:"@id"`
+	Type                       string            `json:"@type"` // did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/present-proof/1.0/propose-presentation
+	Comment                    string            `json:"comment"`
+	RequestPresentationsAttach []AttachDecorator `json:"request_presentations~attach"`
+}
+
+// <<<<< dr.jhyun ------------------------------------------------------------------------------------------------------
 
 // TODO
 // type Proof struct {

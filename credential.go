@@ -7,7 +7,7 @@ import (
 )
 
 type Credential struct {
-	Referent               string            `json:"referent"` // Also know as CredentialID
+	Referent               string            `json:"referent"` // Also known as CredentialID
 	CredentialDefinitionID string            `json:"cred_def_id"`
 	CredentialRevokeID     string            `json:"cred_rev_id"`
 	SchemaID               string            `json:"schema_id"`
@@ -22,15 +22,15 @@ func (c *Client) GetCredentials(max int, index int, wql string) ([]Credential, e
 		Credentials []Credential `json:"results"`
 	}
 	// dr.jhyun
-/*
+	/*
+		queryParams := map[string]string{
+			"max":   strconv.Itoa(max),
+			"index": strconv.Itoa(index),
+			"wql":   wql,
+		}
+	*/
 	queryParams := map[string]string{
-		"max":   strconv.Itoa(max),
-		"index": strconv.Itoa(index),
-		"wql":   wql,
-	}
-*/
-	queryParams := map[string]string{
-		"count":   strconv.Itoa(max),
+		"count": strconv.Itoa(max),
 		"start": strconv.Itoa(index),
 		"wql":   wql,
 	}

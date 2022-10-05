@@ -2,9 +2,11 @@ package acapy
 
 import (
 	"bytes"
-	"encoding/json"
-	"fmt"
 	"io"
+
+	//"encoding/json"
+	"fmt"
+	"github.com/clarketm/json" // dr.jhyun
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -106,17 +108,17 @@ func (c *Client) request(method string, url string, queryParams map[string]strin
 
 	response, err := c.HTTPClient.Do(r)
 	// >>>>> dr.jhyun ------------------------------------------------------------------------------------------------------
-/*
-	if err != nil || response.StatusCode >= 300 {
-		if response != nil {
-			log.Printf("Request failed: %s", response.Status)
-			if body, err := ioutil.ReadAll(response.Body); err == nil {
-				log.Printf("Response body: %s", body)
+	/*
+		if err != nil || response.StatusCode >= 300 {
+			if response != nil {
+				log.Printf("Request failed: %s", response.Status)
+				if body, err := ioutil.ReadAll(response.Body); err == nil {
+					log.Printf("Response body: %s", body)
+				}
 			}
+			return err
 		}
-		return err
-	}
-*/
+	*/
 	defer func() {
 		if response != nil {
 			_, _ = io.Copy(ioutil.Discard, response.Body)

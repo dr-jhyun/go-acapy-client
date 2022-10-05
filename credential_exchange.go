@@ -50,7 +50,7 @@ type credentialProposalRequest struct {
 	ConnectionID           string            `json:"connection_id"` // required
 	IssuerDID              string            `json:"issuer_did,omitempty"`
 	Comment                string            `json:"comment,omitempty"`
-	CredentialPreview      CredentialPreview `json:"credential_proposal"` // required
+	CredentialPreview      CredentialPreview `json:"credential_proposal,omitempty"` // required, add omitempty by dr.jhyun
 	SchemaID               string            `json:"schema_id,omitempty"`
 	Trace                  bool              `json:"trace,omitempty"`
 	AutoRemove             bool              `json:"auto_remove,omitempty"`
@@ -318,7 +318,7 @@ func (c *Client) ReportCredentialExchangeProblem(credentialExchangeID string, me
 	var body = struct {
 		// dr.jhyun
 		Message string `json:"description"`
-//		Message string `json:"explain_ltxt"`
+		//		Message string `json:"explain_ltxt"`
 	}{
 		Message: message,
 	}
