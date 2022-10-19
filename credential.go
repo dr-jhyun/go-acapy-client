@@ -2,6 +2,7 @@ package acapy
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strconv"
 )
@@ -29,6 +30,12 @@ func (c *Client) GetCredentials(max int, index int, wql string) ([]Credential, e
 			"wql":   wql,
 		}
 	*/
+
+	// dr.jhyun, check wql parameter
+	if json.Valid([]byte(wql)) != true {
+		return []Credential{}, errors.New(fmt.Sprintf("wql '%s' is not valid json", wql))
+	}
+
 	queryParams := map[string]string{
 		"count": strconv.Itoa(max),
 		"start": strconv.Itoa(index),
