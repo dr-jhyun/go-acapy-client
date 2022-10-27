@@ -230,7 +230,7 @@ func (app *App) ReadCommands() {
 			app.presentationExchange = presentationExchange
 		case "8":
 			// What about the Revealed flag? -> in case of multiple credentials
-			requestedAttributes, err := app.client.FindMatchingCredentials(app.presentationExchange.PresentationRequest)
+			requestedAttributes, _, err := app.client.FindMatchingCredentials(app.presentationExchange.PresentationRequest)
 
 			proof := acapy.NewPresentationProof(requestedAttributes, nil, nil)
 
