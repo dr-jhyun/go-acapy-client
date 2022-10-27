@@ -1,4 +1,4 @@
-module github.com/ldej/go-acapy-client
+module github.com/dr-jhyun/go-acapy-client
 
 go 1.16
 
