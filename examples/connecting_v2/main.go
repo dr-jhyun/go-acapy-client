@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/dr-jhyun/go-acapy-client"
 	"log"
 	"math/rand"
 	"net/http"

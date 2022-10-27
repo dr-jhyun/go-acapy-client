@@ -17,7 +17,7 @@ To become an Aries developer, attend these courses by the Linux Foundation on [e
 ## Installation
 
 ```shell
-$ go get -u github.com/dr-jhyun/go-acapy-client
+$ go get -u github.com/ldej/go-acapy-client
 ```
 
 ## Compatibility
@@ -60,7 +60,7 @@ Create a client, register a DID in the ledger and create an invitation.
 ```go
 package main
 
-import "github.com/dr-jhyun/go-acapy-client"
+import "github.com/ldej/go-acapy-client"
 
 func main() {
     var ledgerURL = "http://localhost:9000"
