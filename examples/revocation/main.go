@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/dr-jhyun/go-acapy-client"
 	"log"
 	"math/rand"
 	"net/http"
@@ -16,7 +17,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/ldej/go-acapy-client"
 )
 
 type App struct {
@@ -248,7 +248,7 @@ func (app *App) ReadCommands() {
 			app.presentationExchange = presentationExchange
 		case "9":
 			// What about the Revealed flag? -> in case of multiple credentials
-			requestedAttributes, err := app.client.FindMatchingCredentials(app.presentationExchange.PresentationRequest)
+			requestedAttributes, _, err := app.client.FindMatchingCredentials(app.presentationExchange.PresentationRequest)
 
 			location, _ := time.LoadLocation("Local")
 			localTime := time.Now().In(location).Unix()

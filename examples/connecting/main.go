@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/dr-jhyun/go-acapy-client"
 	"log"
 	"math/rand"
 	"net/http"
@@ -16,7 +17,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/ldej/go-acapy-client"
 )
 
 type App struct {
@@ -247,21 +247,21 @@ func main() {
 }
 
 func (app *App) RegisterDID(alias string, seed string) (acapy.RegisterDIDResponse, error) {
-/*
-	didResponse, err := acapy.RegisterDID(
-		app.ledgerURL+"/register",
-		alias,
-		seed,
-		acapy.Endorser,
-	)
-	if err != nil {
-		return acapy.RegisterDIDResponse{}, err
-	}
-	app.label = alias
-	app.seed = didResponse.Seed
-	app.StartACApy()
-*/
-	didResponse := acapy.RegisterDIDResponse{ DID: "7SGtKCBxR46K84f755RdtZ" }
+	/*
+		didResponse, err := acapy.RegisterDID(
+			app.ledgerURL+"/register",
+			alias,
+			seed,
+			acapy.Endorser,
+		)
+		if err != nil {
+			return acapy.RegisterDIDResponse{}, err
+		}
+		app.label = alias
+		app.seed = didResponse.Seed
+		app.StartACApy()
+	*/
+	didResponse := acapy.RegisterDIDResponse{DID: "7SGtKCBxR46K84f755RdtZ"}
 	return didResponse, nil
 }
 
