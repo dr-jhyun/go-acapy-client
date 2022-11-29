@@ -2,7 +2,6 @@ package acapy
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strconv"
 )
@@ -21,19 +20,6 @@ type Credential struct {
 func (c *Client) GetCredentials(max int, index int, wql string) ([]Credential, error) {
 	var results struct {
 		Credentials []Credential `json:"results"`
-	}
-	// dr.jhyun
-	/*
-		queryParams := map[string]string{
-			"max":   strconv.Itoa(max),
-			"index": strconv.Itoa(index),
-			"wql":   wql,
-		}
-	*/
-
-	// dr.jhyun, check wql parameter
-	if json.Valid([]byte(wql)) != true {
-		return []Credential{}, errors.New(fmt.Sprintf("wql '%s' is not valid json", wql))
 	}
 
 	queryParams := map[string]string{
